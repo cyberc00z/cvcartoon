@@ -56,6 +56,36 @@ def changeToCartoon(ImagePath):
     save1.pack(side=TOP, pady=50)
     plt.show()
 
+def liveCapture():
+    cap = cv2.VideoCapture(0)
+    cv2.namedWindow("Live Capture")
+    img_count = 0
+    while True:
+        ret, frame = cap.read()
+
+        if not ret:
+            print("failed to open camera")
+            break
+        cv2.imshow("yoyo", frame)
+
+        k =cv2.waitKey(1)
+
+        # for exit live capturing window please press esc
+        if k%256 == 27:
+            # esc
+            print("Exiting...")
+            break
+        # enter space for saving live image
+
+        elif k%256 == 32:
+            name = "live_img.png"
+            cv2.imwrite(name, frame)
+            print("Image Saved!")
+            img_count += 1
+
+    cap.release()
+    
+
 
 def uploadBox():
     ImagePath = easygui.fileopenbox()
@@ -76,5 +106,10 @@ upload = tk.Button(top, text= " Choose an Image Please", command=uploadBox,padx=
 upload.configure(background='#364156',foreground='white', font=('calibri', 10, 'bold'))
 upload.pack(side=TOP, pady=50)
 
-top.mainloop()
+# added live capturing option
+upload2 = tk.Button(top, text="Live Capture", command=liveCapture, padx=10, pady=5)
+upload2.configure(background='#364156',foreground='white',font=('calibri',10, 'bold'))
+upload2.pack(side=TOP, pady=50)
 
+cv2.destroyAllWindows()
+top.mainloop()
